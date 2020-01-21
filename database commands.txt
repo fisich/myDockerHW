@@ -1,0 +1,56 @@
+use master
+CREATE DATABASE CinemaSQL
+GO
+ALTER DATABASE CinemaSQL COLLATE Cyrillic_General_CI_AS
+GO
+USE CinemaSQL
+CREATE TABLE [Subscription] (
+	id_Subscription int PRIMARY KEY IDENTITY (1,1),
+	Name nvarchar(32) NOT NULL,
+	Price int NOT NULL,
+)
+GO
+CREATE TABLE [Country] (
+	id_Country int PRIMARY KEY IDENTITY (1,1),
+	Name nvarchar(32) NOT NULL UNIQUE,
+)
+GO
+CREATE TABLE [City] (
+	id_City int PRIMARY KEY IDENTITY (1,1),
+	id_Country int FOREIGN KEY REFERENCES Country(id_Country),
+	Name nvarchar(32) NOT NULL,
+)
+GO
+CREATE TABLE [User] (
+	id_User int PRIMARY KEY IDENTITY (1,1),
+	Login nvarchar(32) NOT NULL UNIQUE,
+	Surname nvarchar(32) NOT NULL,
+	Name nvarchar(32) NOT NULL,
+	Patronymic nvarchar(32),
+	Gender bit NOT NULL,
+	Birthdate date NOT NULL,
+	PassHash nvarchar(16) NOT NULL,
+	id_Country int FOREIGN KEY REFERENCES Country(id_Country),
+	id_City int FOREIGN KEY REFERENCES City(id_City),
+)
+GO
+CREATE TABLE [People] (
+	id_People int PRIMARY KEY IDENTITY (1,1),
+	Surname nvarchar(32) NOT NULL,
+	Name nvarchar(32) NOT NULL,
+	Patronymic nvarchar(32),
+	Gender bit NOT NULL,
+	Birthdate date NOT NULL,
+	Diedate date,
+	id_Country int FOREIGN KEY REFERENCES Country(id_Country),
+	id_City int FOREIGN KEY REFERENCES City(id_City),
+)
+GO
+CREATE TABLE [UsersSubs] (
+	id_UsersSubs int PRIMARY KEY IDENTITY (1,1),
+	id_User int FOREIGN KEY REFERENCES [User](id_User),
+	id_Subscription int FOREIGN KEY REFERENCES [Subscription](id_Subscription),
+	Buydate date NOT NULL,
+	Enddate date NOT NULL,
+)
+GO
